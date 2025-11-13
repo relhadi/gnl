@@ -6,7 +6,7 @@
 /*   By: relhadi <relhadi@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 16:21:27 by relhadi           #+#    #+#             */
-/*   Updated: 2025/11/13 17:52:33 by relhadi          ###   ########.fr       */
+/*   Updated: 2025/11/13 19:15:25 by relhadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,27 +65,28 @@ static void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-static char	*ft_strjoin(char *s1, char *s2)
+static char	*ft_strjoin(const char *s1, const char *s2)
 {
 	size_t	s1_len;
 	size_t	s2_len;
 	char	*conc_strings;
 
-	if (!s1 && !s2)
-		return (NULL);
 	if (!s1)
-		return(ft_strdup(s2));
+	{
+		conc_strings = ft_strdup(s2);
+		return (conc_strings);
+	}
 	if (!s2)
-		return(s1);
+		return((char *)s1);
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
 	conc_strings = malloc(sizeof(char) * (s1_len + s2_len + 1));
 	if (!conc_strings)
 		return (NULL);
+	conc_strings[s1_len + s2_len] = '\0';
 	ft_memcpy(conc_strings, s1, s1_len);
 	ft_memcpy(conc_strings + s1_len, s2, s2_len);
-	conc_strings[s1_len + s2_len] = '\0';
-	free(s1);
+	free((char *)s1);
 	return (conc_strings);
 }
 
@@ -112,6 +113,7 @@ char	*get_next_line(int fd)
 		line = ft_strjoin(line, buff);
 	stash = ft_strdup(ft_strchr(buff, '\n'));
 	line = ft_strjoin(line, ft_rev_strchr(buff, '\n'));
+	free(buff);
 	return (line);
 }
 
@@ -128,7 +130,7 @@ int main(void)
     }
 
 	int	i = 0;
-	while (i < 1)
+	while (i < 5)
 	{
 		line = get_next_line(fd);
 		if (!line)

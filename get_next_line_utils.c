@@ -12,15 +12,23 @@
 
 #include <stdlib.h>
 
-char	*ft_rev_strchr(char	*str, char c)
+char	*ft_rev_strchr(const char *s, int c)
+
 {
 	int	i;
-
+	
 	i = 0;
-	while (str[i] != c)
+	if (!s)
+		return (NULL);
+	while (s[i])
+	{
 		i++;
-	str[i + 1] = 0;
-	return (str);
+	}
+	while (i > 0 && s[i] != (unsigned char)c)
+		i--;
+	if (s[i] == (unsigned char)c)
+		return ((char *)s + i);
+	return (NULL);
 }
 
 char	*ft_strchr(const char *string, int searchedChar)
@@ -28,7 +36,9 @@ char	*ft_strchr(const char *string, int searchedChar)
 	char	c;
 	char	*s;
 	int		i;
-
+	
+	if (!string)
+		return (NULL);
 	c = (char) searchedChar;
 	s = (char *)string;
 	i = 0;

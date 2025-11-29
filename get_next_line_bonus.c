@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: relhadi <relhadi@42angouleme.fr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/18 09:30:20 by relhadi           #+#    #+#             */
-/*   Updated: 2025/11/25 12:41:29 by relhadi          ###   ########.fr       */
+/*   Created: 2025/11/19 15:25:32 by relhadi           #+#    #+#             */
+/*   Updated: 2025/11/19 15:29:29 by relhadi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*ft_cleanup(char *buff, char **line, char **storage)
 {
@@ -87,13 +87,13 @@ char	*get_next_line(int fd)
 {
 	char		*buff;
 	char		*line;
-	static char	*storage = NULL;
+	static char	*storage[1024];
 	ssize_t		read_bytes;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 1023)
 		return (NULL);
 	line = NULL;
-	if (!ft_verify_storage(&buff, &storage, &line))
+	if (!ft_verify_storage(&buff, &storage[fd], &line))
 		return (NULL);
 	while (1)
 	{
@@ -105,8 +105,8 @@ char	*get_next_line(int fd)
 		if (ft_find_n(line))
 			break ;
 	}
-	if (read_bytes < 0 && !ft_cleanup(buff, &line, &storage))
+	if (read_bytes < 0 && !ft_cleanup(buff, &line, &storage[fd]))
 		return (NULL);
 	free(buff);
-	return (ft_handle_line(&line, &storage));
+	return (ft_handle_line(&line, &storage[fd]));
 }
